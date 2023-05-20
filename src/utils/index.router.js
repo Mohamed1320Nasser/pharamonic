@@ -14,13 +14,11 @@ if (process.env.MODE_ENV === "development") {
 }
 
   //setup API routes
-  app.use("/manger", require("../component/manger/monger.routes"));
-  // app.use("/activities", require("./activities/activity.routes"));
-  // app.use("/students", require("./student/student.routes"));
-  // app.use("/categories", require("./Categories/category.routes"));
-  // app.use("/trips", require("./trips/trips.routes"));
-  // app.use("/enroll", require("./enroll/enroll.routes"));
-  // app.use("/contact", require("./studentMessage/message.routes"));
+  app.use("/mangers", require("../component/manger/monger.routes"));
+  app.use("/medications", require("../component/medication/medication.routes"));
+  app.use("/doctors", require("../component/doctor/doctor.routes"));
+  app.use("/patients", require("../component/patient/patient.routes"));
+  
 
   // end point to tell us wrong path
   app.all("*", (req, res, next) => {

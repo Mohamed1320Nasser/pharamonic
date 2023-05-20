@@ -1,4 +1,4 @@
-const { Schema, model, Types } = require("mongoose")
+const { Schema, model } = require("mongoose")
 
 const schema = new Schema({
     name: {
@@ -12,11 +12,18 @@ const schema = new Schema({
     email: {
         type: String
     },
-    id: {
-        type: String,
+    Id:{
+        type:String,
         required: true,
-        unique: true
-    },
+        unique: true,
+       },
+       password:{
+           type:String,
+          default:"Manger#2023"
+       },
+       passwordChangeAt:{
+        type:Date,
+      },
     role:{
         type:String,
         default:" manger",
@@ -33,7 +40,12 @@ const schema = new Schema({
         type:String,
         default:"default"
     },
-   
 });
+schema.pre("save", function () {
+    this.password = bcrypt.hashSync(
+      this.password,
+      Number(process.env.saltRounds)
+    );
+  });
 
 module.exports=model('Manger',schema)

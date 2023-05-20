@@ -1,4 +1,4 @@
-const { Schema, model, Types } = require("mongoose")
+const { Schema, model } = require("mongoose")
 
 const schema = new Schema({
     name: {
@@ -14,11 +14,18 @@ const schema = new Schema({
         required: true
     },
     email: { type: String },
-    ID: {
-        type: String,
+    Id:{
+        type:String,
         required: true,
-        unique: true
-    },
+        unique: true,
+       },
+       password:{
+           type:String,
+          default:"Nurse#2023"
+       },
+       passwordChangeAt:{
+        type:Date,
+      },
     profileImage:{
         type:String,
         default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993602/defult/119044_mec8za.png"
@@ -32,5 +39,11 @@ const schema = new Schema({
         default:" nurse",
     },
 })
+schema.pre("save", function () {
+    this.password = bcrypt.hashSync(
+      this.password,
+      Number(process.env.saltRounds)
+    );
+  });
 
 module.exports = model('Nurse', schema)

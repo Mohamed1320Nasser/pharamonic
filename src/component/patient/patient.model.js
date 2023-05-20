@@ -1,10 +1,22 @@
-const { Schema, model, Types } = require("mongoose")
+const { Schema, model } = require("mongoose")
 
 const schema = new Schema({
     name: {
         type: String,
         required: true
     },
+    Id:{
+     type:String,
+     required: true,
+     unique: true,
+    },
+    password:{
+        type:String,
+        default:"Patient#2023"
+    },
+    passwordChangeAt:{
+        type:Date,
+      },
     dateOfBirth: {
         type: Date,
         required: true
@@ -39,4 +51,10 @@ const schema = new Schema({
         default:" patient",
     },
 })
+schema.pre("save", function () {
+    this.password = bcrypt.hashSync(
+      this.password,
+      Number(process.env.saltRounds)
+    );
+  });
 module.exports = model('Patient', schema)

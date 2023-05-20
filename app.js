@@ -20,7 +20,6 @@ app.use(bodyParser.json());
 // module dotenv to save the improtant data
 require("dotenv").config({ path: "./config/.env" });
 
-
 // all routers 
 appRouter(app)
 
