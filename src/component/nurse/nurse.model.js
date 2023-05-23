@@ -1,11 +1,15 @@
 const { Schema, model } = require("mongoose")
-
+const bcrypt = require('bcrypt')
 const schema = new Schema({
     name: {
         type: String,
         required: true
     },
     address: {
+        type: String,
+        required: true
+    },
+    Department: {
         type: String,
         required: true
     },
@@ -21,7 +25,6 @@ const schema = new Schema({
        },
        password:{
            type:String,
-          default:"Nurse#2023"
        },
        passwordChangeAt:{
         type:Date,

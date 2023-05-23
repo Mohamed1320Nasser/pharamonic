@@ -5,7 +5,7 @@ exports.create = (Model) => {
     return catchAsyncError(async (req, res, next) => {
         const Document = new Model(req.body)
         await Document.save
-        res.status(200).json({ message: "sucessful save", result: Document })
+        res.status(200).json({ message: "Sucessful Save"})
     })
 }
 exports.getOne = (Model) => {
@@ -29,7 +29,7 @@ exports.deleteOn = (Model) => {
       const Document = await Model.findById(id);
       if (!Document) return next(new AppError("Document not found", 404));
       await Model.findByIdAndDelete(id);
-      res.status(200).json("deleted");
+      res.status(200).json({message:"Sucessful Delete"});
     });
   };
 
@@ -43,7 +43,7 @@ exports.updateOne = (Model) =>{
         !Document && next(
             new AppError(`No document for this id ${req.params.id}`, 404)
         );
-        Document && res.status(200).json({ data: Document });
+        Document && res.status(200).json({message:"Sucessful Update"});
     });
 }
 

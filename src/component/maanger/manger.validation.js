@@ -1,5 +1,5 @@
 const joi = require("joi");
-exports.DoctorSchema = {
+exports.MangerSchema = {
   body: joi
     .object()
     .required()
@@ -14,28 +14,19 @@ exports.DoctorSchema = {
           'string.min': 'Name should have a minimum length of {#limit}.',
           'string.max': 'Name should have a maximum length of {#limit}.',
         }),
-      specialty: joi.string()
-        .min(3)
-        .max(30)
-        .required()
-        .messages({
-          'any.required': 'Specialty is required.',
-          'string.empty': 'Specialty cannot be empty.',
-          'string.min': 'Specialty should have a minimum length of {#limit}.',
-          'string.max': 'Specialty should have a maximum length of {#limit}.',
-        }),
       email: joi.string().email().messages({
         'string.email': 'Invalid email format.',
         "string.required": "user email field is required",
         "string.empty": "empty user email is not acceptable",
+        'any.required': 'Name is required.',
       }),
       Id: joi.string()
-        .pattern(/^Dr.{6}$/)
+        .pattern(/^Mr.{6}$/)
         .required()
         .messages({
           'any.required': 'ID is required.',
           'string.empty': 'ID cannot be empty.',
-          'string.pattern.base': 'ID must start with "Dr" and be 8 characters long.',
+          'string.pattern.base': 'ID must start with "Mr" and be 8 characters long.',
         }),
       phone: joi.number().required().messages({
         'any.required': 'Phone is required.',
@@ -43,5 +34,3 @@ exports.DoctorSchema = {
       }),
     })
 };
-
-

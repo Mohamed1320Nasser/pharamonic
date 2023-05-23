@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose")
+const bcrypt = require('bcrypt')
 
 const schema = new Schema({
     name: {
@@ -19,7 +20,6 @@ const schema = new Schema({
        },
        password:{
            type:String,
-          default:"Manger#2023"
        },
        passwordChangeAt:{
         type:Date,
@@ -28,10 +28,7 @@ const schema = new Schema({
         type:String,
         default:" manger",
     },
-    password: {
-        type: String,
-        required: true,
-    },
+
     profileImage:{
         type: String,
         default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993281/defult/950150_fix89l.png"

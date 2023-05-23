@@ -1,4 +1,6 @@
-const dataMethod = ['body', 'params', 'query', 'headers']
+const AppError = require("./AppError")
+
+const dataMethod = ['body', 'params', 'headers']
 
 exports.validation = (Schema) => {
     return (req, res, next) => {
@@ -8,6 +10,7 @@ exports.validation = (Schema) => {
                 if (Schema[key]) {
                     const validationResult = Schema[key].validate(req[key], { abortEarly: false })
                     if (validationResult?.error) {
+
                         validationArr.push(validationResult.error.details)
                     }
                 }
@@ -15,10 +18,12 @@ exports.validation = (Schema) => {
             if (validationArr.length) {
                 return res.status(400).json({ message: "Validation error", validationArr })
             } else {
+
                 return next()
+            
             }
         } catch (error) {
-            return next(new Error("validation err", 500 ))
+            return next(new AppError("validation err", 500 ))
         }
     }
 }

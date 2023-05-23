@@ -1,5 +1,7 @@
+const { validation } = require('../../utils/validation')
+const { loginSchema, changePassSchema } = require('../auth/auth.validation')
 const { protectedRoutes, allowedTo } = require('../auth/authentcation')
-const mangerModel = require('../manger/manger.model')
+const mangerModel = require('../maanger/manger.model')
 const doctorModel = require('./doctor.model')
 const {
     createDoctorAccount,
@@ -8,24 +10,24 @@ const {
     UpdateDoctorAccount,
     deleteDoctorAccount,
     loginDoctor,
-    changePassDoctor
+    changePassDoctor,
+    doctorProfile
 } = require('./doctor.service')
-
+const { DoctorSchema } = require('./doctor.validation')
 
 const router = require('express').Router()
-router.use(protectedRoutes(mangerModel), allowedTo('manger'))
-router.post('/auth', loginDoctor)
-router.get('/profile',protectedRoutes(doctorModel), allowedTo('doctor'), doctorProfile)
-router.post('/profile/changePass',protectedRoutes(doctorModel), allowedTo('doctor'), changePassDoctor)
+router.post('/auth', validation(loginSchema), loginDoctor)
+router.get('/profile', protectedRoutes(doctorModel), allowedTo('doctor'), doctorProfile)
+router.post('/profile/changePass', protectedRoutes(doctorModel), allowedTo('doctor'), validation(changePassSchema), changePassDoctor)
 
+router.use(protectedRoutes(mangerModel), allowedTo('manger'))
 router.route('/')
-    .post(protectedRoutes(mangerModel), allowedTo('manger'), createDoctorAccount)
-    .get(protectedRoutes(mangerModel), allowedTo('manger'), getAllDoctorAccounts)
+    .post(validation(DoctorSchema), createDoctorAccount)
+    .get(getAllDoctorAccounts)
 router
     .route('/:id')
-    .post(protectedRoutes(mangerModel), allowedTo('manger'), createDoctorAccount)
-    .get(protectedRoutes(mangerModel), allowedTo('manger'), getSpcificDoctorAccount)
-    .put(protectedRoutes(mangerModel), allowedTo('manger'), UpdateDoctorAccount)
-    .delete(protectedRoutes(mangerModel), allowedTo('manger'), deleteDoctorAccount)
+    .get(validation(DoctorSchema), getSpcificDoctorAccount)
+    .put(UpdateDoctorAccount)
+    .delete(deleteDoctorAccount)
 
 module.exports = router

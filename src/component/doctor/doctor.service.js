@@ -3,11 +3,19 @@ const DoctorMode=require('./doctor.model')
 const factory=require("../Handler/handle.refactor");
 const { Signin, changePassword, getProfile } = require('../auth/authentcation');
 
+// craete Doctor account 
+exports.createDoctorAccount = catchAsyncError(async (req, res, next) => {
+    const IsDoctor = await DoctorMode.findOne({ Id: req.body.Id });
+    if(IsDoctor)  return next(new AppError("Manager alredy exist", 401));
+    req.body.password=process.env.DEFAULT_DOCTOR
+    const Doctor = new DoctorMode(req.body);
+    await Doctor.save();
+    return res.status(200).json({ message:"success to Create Doctor"});
+  });
+
 // authenticate login in doctor
 exports.loginDoctor = Signin(DoctorMode)
 
-// craete Doctor account 
-exports.createDoctorAccount = factory.create(DoctorMode)
 
 // get all Doctors
 exports.getAllDoctorAccounts = factory.getAll(DoctorMode)

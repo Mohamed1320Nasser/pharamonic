@@ -4,6 +4,8 @@ const { catchAsyncError } = require('../../utils/catchAsyncErr');
 const AppError = require('../../utils/AppError');
 
 
+
+
 module.exports.Signin = (Model)=>{
 return catchAsyncError(async (req, res, next) => {
     const User = await Model.findOne({ Id: req.body.Id });
@@ -13,7 +15,7 @@ return catchAsyncError(async (req, res, next) => {
       { UserId: User._id, name: User.name ,role:User.role},
       process.env.secrit_key
     );
-    return res.status(200).json({ message:"Login success",token,role:User.role });
+    return res.status(200).json({ message:"Login success",token});
   });
 }
 exports.protectedRoutes = (Model)=>{

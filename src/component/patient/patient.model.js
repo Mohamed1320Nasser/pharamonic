@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose")
-
+const bcrypt = require('bcrypt')
 const schema = new Schema({
     name: {
         type: String,
@@ -12,7 +12,6 @@ const schema = new Schema({
     },
     password:{
         type:String,
-        default:"Patient#2023"
     },
     passwordChangeAt:{
         type:Date,

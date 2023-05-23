@@ -1,5 +1,7 @@
+const { validation } = require('../../utils/validation')
+const { loginSchema, changePassSchema } = require('../auth/auth.validation')
 const { protectedRoutes, allowedTo } = require('../auth/authentcation')
-const mangerModel = require('../manger/manger.model')
+const mangerModel = require('../maanger/manger.model')
 const nurseModel = require('./nurse.model')
 const {
     createNurseAccount,
@@ -11,20 +13,20 @@ const {
     nurseprofile,
     nurseCangePass
 } = require('./nurse.service')
+const { NurseSchema } = require('./nurse.validation')
 
 
 const router = require('express').Router()
 
-router.post('/auth', nurseLogin)
+router.post('/auth',validation(loginSchema), nurseLogin)
 router.get('/profile',protectedRoutes(nurseModel),allowedTo('nurse'), nurseprofile)
-router.post('/profile/changePass', protectedRoutes(nurseModel),allowedTo('nurse'),nurseCangePass)
+router.post('/profile/changePass', protectedRoutes(nurseModel),allowedTo('nurse'),validation(changePassSchema),nurseCangePass)
 
 router.use(protectedRoutes(mangerModel),allowedTo('manger'))
-router.route('/').post(createNurseAccount).get(getAllNurseAccounts)
+router.route('/').post(validation(NurseSchema),createNurseAccount).get(getAllNurseAccounts)
 router
     .route('/:id')
-    .post(createNurseAccount)
     .get(getSpcificNurseAccount)
-    .put(UpdateNurseAccount)
+    .put(validation(NurseSchema),UpdateNurseAccount)
     .delete(deleteNurseAccount)
 module.exports = router
