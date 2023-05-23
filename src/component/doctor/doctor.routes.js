@@ -13,7 +13,7 @@ const {
     changePassDoctor,
     doctorProfile
 } = require('./doctor.service')
-const { DoctorSchema } = require('./doctor.validation')
+const { DoctorSchema, UpdateDoctorSchema } = require('./doctor.validation')
 
 const router = require('express').Router()
 router.post('/auth', validation(loginSchema), loginDoctor)
@@ -26,8 +26,8 @@ router.route('/')
     .get(getAllDoctorAccounts)
 router
     .route('/:id')
-    .get(validation(DoctorSchema), getSpcificDoctorAccount)
-    .put(UpdateDoctorAccount)
+    .get(getSpcificDoctorAccount)
+    .put(validation(UpdateDoctorSchema),UpdateDoctorAccount)
     .delete(deleteDoctorAccount)
 
 module.exports = router

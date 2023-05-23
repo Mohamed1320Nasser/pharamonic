@@ -26,7 +26,7 @@ const schema = new Schema({
       },
     role:{
         type:String,
-        default:" manger",
+        default:"manger",
     },
 
     profileImage:{

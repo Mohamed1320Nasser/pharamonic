@@ -5,7 +5,6 @@ const AppError = require('../../utils/AppError');
 
 
 
-
 module.exports.Signin = (Model)=>{
 return catchAsyncError(async (req, res, next) => {
     const User = await Model.findOne({ Id: req.body.Id });
@@ -23,7 +22,7 @@ exports.protectedRoutes = (Model)=>{
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
     let decoded = jwt.verify(token, process.env.secrit_key);
-    const User = await Model.findById(decoded.StudentId);
+    const User = await Model.findById(decoded.UserId);
     if (!User) return next(new AppError("User not found", 404));
     if (User.passwordChangeAt) {
       let changePassword = parseInt(User.passwordChangeAt.getTime() / 100);

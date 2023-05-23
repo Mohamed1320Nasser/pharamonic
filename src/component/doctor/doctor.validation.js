@@ -43,5 +43,36 @@ exports.DoctorSchema = {
       }),
     })
 };
+exports.UpdateDoctorSchema = {
+  body: joi
+    .object()
+    .required()
+    .keys({
+      name: joi.string()
+        .min(3)
+        .max(30)
+        .messages({
+          'string.empty': 'Name cannot be empty.',
+          'string.min': 'Name should have a minimum length of {#limit}.',
+          'string.max': 'Name should have a maximum length of {#limit}.',
+        }),
+      specialty: joi.string()
+        .min(3)
+        .max(30)
+        .messages({
+          'string.empty': 'Specialty cannot be empty.',
+          'string.min': 'Specialty should have a minimum length of {#limit}.',
+          'string.max': 'Specialty should have a maximum length of {#limit}.',
+        }),
+      email: joi.string().email().messages({
+        'string.email': 'Invalid email format.',
+        "string.empty": "empty user email is not acceptable",
+      }),
+  
+      phone: joi.number().messages({
+        'number.base': 'Phone must be a number.',
+      }),
+    })
+};
 
 

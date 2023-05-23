@@ -13,7 +13,7 @@ const {
     nurseprofile,
     nurseCangePass
 } = require('./nurse.service')
-const { NurseSchema } = require('./nurse.validation')
+const { NurseSchema, UpadteNurseSchema } = require('./nurse.validation')
 
 
 const router = require('express').Router()
@@ -27,6 +27,6 @@ router.route('/').post(validation(NurseSchema),createNurseAccount).get(getAllNur
 router
     .route('/:id')
     .get(getSpcificNurseAccount)
-    .put(validation(NurseSchema),UpdateNurseAccount)
+    .put(validation(UpadteNurseSchema),UpdateNurseAccount)
     .delete(deleteNurseAccount)
 module.exports = router

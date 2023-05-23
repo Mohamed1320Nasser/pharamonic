@@ -34,3 +34,29 @@ exports.MangerSchema = {
       }),
     })
 };
+exports.UpadteMangerSchema = {
+  body: joi
+    .object()
+    .required()
+    .keys({
+      name: joi.string()
+        .min(3)
+        .max(30)
+        .messages({
+          'any.required': 'Name is required.',
+          'string.empty': 'Name cannot be empty.',
+          'string.min': 'Name should have a minimum length of {#limit}.',
+          'string.max': 'Name should have a maximum length of {#limit}.',
+        }),
+      email: joi.string().email().messages({
+        'string.email': 'Invalid email format.',
+        "string.required": "user email field is required",
+        "string.empty": "empty user email is not acceptable",
+        'any.required': 'Name is required.',
+      }),
+      phone: joi.number().messages({
+        'any.required': 'Phone is required.',
+        'number.base': 'Phone must be a number.',
+      }),
+    })
+};

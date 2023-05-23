@@ -13,7 +13,7 @@ const {
     patientProfile,
     patientChangePass
 } = require('./patient.service')
-const { PatientSchema } = require('./patient.validation')
+const { PatientSchema, UpadtePatientSchema } = require('./patient.validation')
 
 const router = require('express').Router()
 router.post('/auth', validation(loginSchema),patientLogin)
@@ -24,6 +24,6 @@ router.route('/').post(validation(PatientSchema),createPatientAccount).get(getAl
 router
     .route('/:id')
     .get(getSpcificPatientAccount)
-    .put(validation(PatientSchema),UpdatePatientAccount)
+    .put(validation(UpadtePatientSchema),UpdatePatientAccount)
     .delete(deletePatientAccount)
 module.exports = router

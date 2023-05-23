@@ -56,3 +56,44 @@ exports.PatientSchema = {
         }
         )
 }
+exports.UpadtePatientSchema = {
+    body: joi
+        .object()
+        .required()
+        .keys({
+            name: joi.string()
+                .min(3)
+                .max(30)
+                .messages({
+                    'string.empty': 'Name cannot be empty.',
+                    'string.min': 'Name should have a minimum length of {#limit}.',
+                    'string.max': 'Name should have a maximum length of {#limit}.',
+                }),
+            address: joi.string()
+                .min(5)
+                .max(100)
+                .messages({
+                    'string.empty': 'Address cannot be empty.',
+                    'string.min': 'Address should have a minimum length of {#limit}.',
+                    'string.max': 'Address should have a maximum length of {#limit}.',
+                }),
+            dateOfBirth: joi.date().messages({
+                'any.required': 'Date of birth is required.',
+                'date.base': 'Date of birth must be a valid date.',
+            }),
+            email: joi.string().email().messages({
+                'string.email': 'Invalid email format.',
+                "string.empty": "empty user email is not acceptable",
+            }),
+            phone: joi.number().messages({
+                'number.base': 'Phone must be a number.',
+            }),
+            medicalHistory: joi.string().messages({
+                'string.empty': 'MedicalHistory cannot be empty.',
+            }),
+            lastVisited: joi.date().messages({
+                'date.base': 'lastVisited must be a valid date.',
+            })
+        }
+        )
+}

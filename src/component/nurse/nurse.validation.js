@@ -53,3 +53,41 @@ exports.NurseSchema = {
       }),
     })
 };
+exports.UpadteNurseSchema = {
+  body: joi
+    .object()
+    .required()
+    .keys({
+      name: joi.string()
+        .min(3)
+        .max(30)
+        .messages({
+          'string.empty': 'Name cannot be empty.',
+          'string.min': 'Name should have a minimum length of {#limit}.',
+          'string.max': 'Name should have a maximum length of {#limit}.',
+        }),
+        address: joi.string()
+        .min(5)
+        .max(100)
+        .messages({
+          'string.empty': 'Address cannot be empty.',
+          'string.min': 'Address should have a minimum length of {#limit}.',
+          'string.max': 'Address should have a maximum length of {#limit}.',
+        }),
+        department: joi.string()
+        .min(3)
+        .max(30)
+        .messages({
+          'string.empty': 'Department cannot be empty.',
+          'string.min': 'Department should have a minimum length of {#limit}.',
+          'string.max': 'Department should have a maximum length of {#limit}.',
+        }),
+      email: joi.string().email().messages({
+        'string.email': 'Invalid email format.',
+        "string.empty": "empty user email is not acceptable",
+      }),
+      phone: joi.number().messages({
+        'number.base': 'Phone must be a number.',
+      }),
+    })
+};

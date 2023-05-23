@@ -2,7 +2,7 @@ const { validation } = require('../../utils/validation')
 const { loginSchema, changePassSchema } = require('../auth/auth.validation')
 const { protectedRoutes, allowedTo } = require('../auth/authentcation')
 const mangerModel = require('./manger.model')
-const { MangerSchema } = require('./manger.validation')
+const { MangerSchema, UpadteMangerSchema } = require('./manger.validation')
 const {
     createManager,
     getMangerAccunt,
@@ -21,6 +21,5 @@ router.use(protectedRoutes(mangerModel), allowedTo('manger'))
 router.get('/profile', mangerProfile)
 router.post('/profile/changePass', validation(changePassSchema), changePassManger)
 router.route('/').post(validation(MangerSchema), createManager).get(getAllMangersAccunts)
-router.route('/:id').get(getMangerAccunt).put(validation(MangerSchema), updateMangerAccunt).delete(deleteMangerAccunt)
-
+router.route('/:id').get(getMangerAccunt).put(validation(UpadteMangerSchema), updateMangerAccunt).delete(deleteMangerAccunt)
 module.exports = router
