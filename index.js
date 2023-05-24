@@ -23,7 +23,7 @@ require("dotenv").config({ path: "./config/.env" });
 // all routers 
 appRouter(app)
 
-const port = process.env.PORT
+const port = process.env.PORT ||4000
 
 
 // Handle rejection outside express
