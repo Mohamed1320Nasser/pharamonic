@@ -8,10 +8,12 @@ exports.validation = (Schema) => {
             const validationArr = []
             dataMethod.forEach(key => {
                 if (Schema[key]) {
-                    const validationResult = Schema[key].validate(req[key], { abortEarly: false })
-                    if (validationResult?.error) {
-
-                        validationArr.push(validationResult.error.details)
+                    const validationResult = Schema[key].validate(req[key], { abortEarly: false, })
+                    if (validationResult?.error?.details) {
+                        validationResult.error.details.forEach((detail) => {
+                            const { message, path } = detail;
+                            validationArr.push({ message,path});
+                        });
                     }
                 }
             })
@@ -20,10 +22,10 @@ exports.validation = (Schema) => {
             } else {
 
                 return next()
-            
+
             }
         } catch (error) {
-            return next(new AppError("validation err", 500 ))
+            return next(new AppError("validation err", 500))
         }
     }
 }

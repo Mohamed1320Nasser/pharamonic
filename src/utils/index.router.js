@@ -18,6 +18,7 @@ if (process.env.MODE_ENV === "development") {
   app.use("/medications", require("../component/medication/medication.routes"));
   app.use("/doctors", require("../component/doctor/doctor.routes"));
   app.use("/patients", require("../component/patient/patient.routes"));
+  app.use("/nurses", require("../component/nurse/nurse.routes"));
   
 
   // end point to tell us wrong path

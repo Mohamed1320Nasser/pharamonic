@@ -8,8 +8,9 @@ const AppError = require('../../utils/AppError');
 module.exports.Signin = (Model)=>{
 return catchAsyncError(async (req, res, next) => {
     const User = await Model.findOne({ Id: req.body.Id });
-    if (!User || !(await bcrypt.compare(req.body.password, User.password)))
-      return next(new AppError("incorrect Id or password", 401));
+    if (!User) return next(new AppError("You do not have an account, or the ID is incorrect", 401));
+    const match = await bcrypt.compare(req.body.password, User.password)
+    if(!match) return next(new AppError("incorrect password", 401));
     const token = jwt.sign(
       { UserId: User._id, name: User.name ,role:User.role},
       process.env.secrit_key
