@@ -1,17 +1,17 @@
-const medivationMode=require('./medication.model')
+const medicationModel=require('./medication.model')
 const factory=require("../Handler/handle.refactor");
 
 // craete medication 
-exports.createMedicate = factory.create(medivationMode)
+exports.createMedicate = factory.create(medicationModel)
 
 // get all medications
-exports.getAllMedicate = factory.getAll(medivationMode)
+exports.getAllMedicate = factory.getAll(medicationModel)
 
 // get specific medication
-exports.getSpcificMedicate = factory.getOne(medivationMode)
+exports.getSpcificMedicate = factory.getOne(medicationModel)
 
 //delete specific medication
-exports.deleteMedicate = factory.deleteOn(medivationMode)
+exports.deleteMedicate = factory.deleteOn(medicationModel)
 
 // update specific medication
-exports.UpdateMedicate = factory.updateOne(medivationMode)
+exports.UpdateMedicate = factory.updateOne(medicationModel)

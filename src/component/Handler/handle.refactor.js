@@ -1,10 +1,13 @@
 const AppError = require("../../utils/AppError")
 const { catchAsyncError } = require("../../utils/catchAsyncErr")
+const medicationModel = require("../medication/medication.model")
 
 exports.create = (Model) => {
     return catchAsyncError(async (req, res, next) => {
-        const Document = new Model(req.body)
-        await Document.save
+        const Document = new medicationModel(req.body)
+        await Document.save()
+        console.log(req.body);
+        console.log(Document);
         res.status(200).json({ message: "Sucessful Save"})
     })
 }
