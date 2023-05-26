@@ -6,7 +6,7 @@ exports.MedicationSchema = {
     .keys({
       name: joi.string()
         .min(3)
-        .max(30)
+        .max(50)
         .required()
         .messages({
           'any.required': 'Name is required.',
@@ -14,22 +14,26 @@ exports.MedicationSchema = {
           'string.min': 'Name should have a minimum length of {#limit}.',
           'string.max': 'Name should have a maximum length of {#limit}.',
         }),
-        activeIngredients: joi.array()
-        .items(joi.string())
+        activeIngredients: joi.string()
         .required()
-        .min(1)
+        .min(3)
+        .max(100)
         .messages({
           'any.required': 'Active ingredients are required.',
-          'array.min': 'At least one active ingredient is required.'
+          'string.empty': 'Active ingredients cannot be empty.',
+          'string.min': 'Active ingredients should have a minimum length of {#limit}.',
+          'string.max': 'Active ingredients should have a maximum length of {#limit}.',
         }),
-      doses: joi.array()
-        .items(joi.string())
+      doses: 
+        joi.string()
         .required()
-        .min(1)
+        .min(3)
+        .max(100)
         .messages({
-          'any.required': 'Doses are required.',
+          'any.required': 'Doses is required.',
           'string.empty': 'Doses cannot be empty.',
-          'array.min': 'At least one dose is required.'
+          'string.min': 'Doses should have a minimum length of {#limit}.',
+          'string.max': 'Doses should have a maximum length of {#limit}.',
         }),
       warnings: joi.string().required().min(3).max(1000).messages({
         'any.required': 'warnings is required.',
@@ -58,18 +62,22 @@ exports.UpdateMedicationSchema = {
           'string.min': 'Name should have a minimum length of {#limit}.',
           'string.max': 'Name should have a maximum length of {#limit}.',
         }),
-        activeIngredients: joi.array()
-        .items(joi.string())
-        .min(1)
+        activeIngredients: joi.string()
+        .min(3)
+        .max(100)
         .messages({
-          'array.min': 'At least one active ingredient is required.'
+          'string.empty': 'Active ingredients cannot be empty.',
+          'string.min': 'Active ingredients should have a minimum length of {#limit}.',
+          'string.max': 'Active ingredients should have a maximum length of {#limit}.',
         }),
-      doses: joi.array()
-        .items(joi.string())
-        .min(1)
+        doses: 
+        joi.string()
+        .min(3)
+        .max(100)
         .messages({
           'string.empty': 'Doses cannot be empty.',
-          'array.min': 'At least one dose is required.'
+          'string.min': 'Doses should have a minimum length of {#limit}.',
+          'string.max': 'Doses should have a maximum length of {#limit}.',
         }),
       warnings: joi.string().min(3).max(1000).messages({
         'string.empty': 'warnings cannot be empty.',

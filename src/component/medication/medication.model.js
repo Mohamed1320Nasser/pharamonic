@@ -7,11 +7,11 @@ const schema = new Schema({
         unique: true
     },
     activeIngredients: {
-        type: [String],
+        type: String,
         required: true
     },
     doses: {
-        type: [String],
+        type: String,
         required: true
     },
     warnings: {

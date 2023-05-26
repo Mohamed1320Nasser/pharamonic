@@ -45,6 +45,11 @@ exports.PatientSchema = {
                 'any.required': 'Phone is required.',
                 'number.base': 'Phone must be a number.',
             }),
+            sex: joi.string().valid('male', 'female').required().messages({
+                'string.base': 'Sex must be a string',
+                'any.required': 'Sex is required',
+                'any.only': 'Sex must be either male or female'
+            }),
             medicalHistory: joi.string().required().messages({
                 'any.required': 'MedicalHistory is required.',
                 'string.empty': 'MedicalHistory cannot be empty.',
@@ -87,6 +92,10 @@ exports.UpadtePatientSchema = {
             }),
             phone: joi.number().messages({
                 'number.base': 'Phone must be a number.',
+            }),
+            sex: joi.string().valid('male', 'female').messages({
+                'string.base': 'Sex must be a string',
+                'any.only': 'Sex must be either "male" or "female"'
             }),
             medicalHistory: joi.string().messages({
                 'string.empty': 'MedicalHistory cannot be empty.',

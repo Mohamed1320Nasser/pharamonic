@@ -16,6 +16,10 @@ const schema = new Schema({
     passwordChangeAt:{
         type:Date,
       },
+      sex:{
+        type:String,
+        enum:["male", "female"]
+      },
     dateOfBirth: {
         type: Date,
         required: true
