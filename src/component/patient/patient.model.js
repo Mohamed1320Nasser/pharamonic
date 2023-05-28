@@ -43,7 +43,7 @@ const schema = new Schema({
     },
     profileImage:{
         type:String,
-        default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993281/defult/950150_fix89l.png"
+        default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1685220950/defult/4228704_bcumy9.png"
     },
     cloudinary_id:{
         type:String,

@@ -19,8 +19,8 @@ if (process.env.MODE_ENV === "development") {
   app.use("/doctors", require("../component/doctor/doctor.routes"));
   app.use("/patients", require("../component/patient/patient.routes"));
   app.use("/nurses", require("../component/nurse/nurse.routes"));
+  app.use("/diagnoses", require("../component/diagnosis/diagnosis.routes"));
   
-
   // end point to tell us wrong path
   app.all("*", (req, res, next) => {
   return  next(

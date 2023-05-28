@@ -36,7 +36,7 @@ const schema = new Schema({
      },
      role: {
           type: String,
-          default: " doctor",
+          default: "doctor",
      },
 })
 schema.pre("save", function () {

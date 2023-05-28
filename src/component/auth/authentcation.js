@@ -2,7 +2,10 @@ const jwt=require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const { catchAsyncError } = require('../../utils/catchAsyncErr');
 const AppError = require('../../utils/AppError');
-
+const mangerModel=require('../maanger/manger.model')
+const doctorModel=require('../doctor/doctor.model')
+const nurseModel=require('../nurse/nurse.model')
+const patientModel=require('../patient/patient.model')
 
 
 module.exports.Signin = (Model)=>{
@@ -18,11 +21,22 @@ return catchAsyncError(async (req, res, next) => {
     return res.status(200).json({ message:"Login success",token});
   });
 }
-exports.protectedRoutes = (Model)=>{
-    return catchAsyncError(async (req, res, next) => {
+exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
     let decoded = jwt.verify(token, process.env.secrit_key);
+    let Model;
+    if (decoded.role === "manger") {
+      Model = mangerModel;
+    } else if (decoded.role === "patient") {
+      Model = patientModel;
+    } else if (decoded.role === "doctor") {
+      Model = doctorModel;
+    } else if (decoded.role === "nurse") {
+      Model = nurseModel;
+    } else {
+      return next(new AppError("Invalid role", 401));
+    }
     const User = await Model.findById(decoded.UserId);
     if (!User) return next(new AppError("User not found", 404));
     if (User.passwordChangeAt) {
@@ -33,9 +47,10 @@ exports.protectedRoutes = (Model)=>{
     req.User = User;
     next();
   });
-}
+
   exports.allowedTo = (...roles) => {
     return catchAsyncError(async (req, res, next) => {
+      console.log(req.User.role);
       if (!roles.includes(req.User.role))
         return next(new AppError("You don't have permission to do this", 401));
       next();
