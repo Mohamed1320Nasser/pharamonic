@@ -30,10 +30,6 @@ const schema = new Schema({
           type: String,
           default: "https://res.cloudinary.com/dufrfkj11/image/upload/v1683993434/defult/3774299_fscjbd.png"
      },
-     cloudinary_id: {
-          type: String,
-          default: "default"
-     },
      role: {
           type: String,
           default: "doctor",

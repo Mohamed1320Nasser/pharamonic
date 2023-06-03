@@ -33,9 +33,9 @@ const schema = new Schema({
         type:String,
         default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993602/defult/119044_mec8za.png"
     },
-    cloudinary_id:{
-        type : String,
-        default:"default"
+    fcmToken:{
+        type:String,
+        default:null
     },
     role:{
         type:String,

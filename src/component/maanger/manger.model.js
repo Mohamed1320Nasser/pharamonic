@@ -33,10 +33,6 @@ const schema = new Schema({
         type: String,
         default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993281/defult/950150_fix89l.png"
     },
-    cloudinary_id:{
-        type:String,
-        default:"default"
-    },
 });
 schema.pre("save", function () {
     this.password = bcrypt.hashSync(

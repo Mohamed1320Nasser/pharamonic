@@ -6,6 +6,7 @@ const cors = require("cors");
 const { appRouter } = require("./src/utils/index.router");
 const bodyParser = require("body-parser");
 const express = require('express');
+const { scheduleMedicationNotifications } = require("./src/component/notification/notification.service");
 
 //express framework
 const app = express()
@@ -25,7 +26,8 @@ appRouter(app)
 
 const port = process.env.PORT ||4000
 
-
+// Call the scheduleMedicationNotifications function periodically (e.g., every minute)
+// setInterval(scheduleMedicationNotifications, 60000);
 // Handle rejection outside express
 process.on("unhandledRejection", (err) => {
     console.log("unhandledRejection", err.stack);
