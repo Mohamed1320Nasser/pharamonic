@@ -7,24 +7,32 @@ const doctorModel=require('../doctor/doctor.model')
 const nurseModel=require('../nurse/nurse.model')
 const patientModel=require('../patient/patient.model')
 
-
-module.exports.Signin = (Model)=>{
-return catchAsyncError(async (req, res, next) => {
-    const User = await Model.findOne({ Id: req.body.Id });
+module.exports.Signin = (Model, type) => {
+  return catchAsyncError(async (req, res, next) => {
+    const { Id, password, fcmToken } = req.body;
+    const User = await Model.findOne({ Id });
     if (!User) return next(new AppError("You do not have an account, or the ID is incorrect", 401));
-    const match = await bcrypt.compare(req.body.password, User.password)
-    if(!match) return next(new AppError("incorrect password", 401));
+    const match = await bcrypt.compare(password, User.password);
+    if (!match) return next(new AppError("Incorrect password", 401));
+    if (type === "nurse" || type === "patient") {
+      if (!fcmToken) {
+        return next(new AppError("fcmToken is missing", 400));
+      }
+      updateFCM(Model,Id,fcmToken)
+    }
     const token = jwt.sign(
-      { UserId: User._id, name: User.name ,role:User.role},
-      process.env.secrit_key
+      { UserId: User._id, name: User.name, role: User.role },
+      `${process.env.secret_key}`
     );
-    return res.status(200).json({ message:"Login success",token});
+    return res.status(200).json({ message: "Login success", token });
   });
-}
+};
+
+
 exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
-    let decoded = jwt.verify(token, process.env.secrit_key);
+    let decoded = jwt.verify(token, `${process.env.secret_key}`);
     let Model;
     if (decoded.role === "manger") {
       Model = mangerModel;
@@ -76,5 +84,9 @@ exports.changePassword =(Model)=>{
          return next(new AppError("Old password is incorrect",401))
         }
       });
-
-}
+    }
+    
+      const updateFCM=async(Model,Id,fcmToken)=>{
+         const upadtefcmTokent = await Model.findOneAndUpdate({Id},{fcmToken})
+         return 
+      }

@@ -12,7 +12,6 @@ if (process.env.MODE_ENV === "development") {
 }else{
     app.use(morgan("combined"));
 }
-
   //setup API routes
   app.use("/mangers", require("../component/maanger/monger.routes"));
   app.use("/medications", require("../component/medication/medication.routes"));
@@ -20,7 +19,7 @@ if (process.env.MODE_ENV === "development") {
   app.use("/patients", require("../component/patient/patient.routes"));
   app.use("/nurses", require("../component/nurse/nurse.routes"));
   app.use("/diagnoses", require("../component/diagnosis/diagnosis.routes"));
-  app.use("/appointment", require("../component/appointment/appointment.routes"));
+  app.use("/appointments", require("../component/appointment/appointment.routes"));
   
   // end point to tell us wrong path
   app.all("*", (req, res, next) => {

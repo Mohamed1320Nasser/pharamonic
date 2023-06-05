@@ -33,13 +33,13 @@ exports.appointmentSchema = {
         })
 };
 
-exports.updateDiagnosisSchema = {
+exports.addNots= {
     body: joi
         .object()
         .required()
         .keys({
 
-            diagnosis: joi.string()
+            doctorNotes: joi.string()
                 .min(3)
                 .max(1000)
                 .messages({
@@ -47,14 +47,5 @@ exports.updateDiagnosisSchema = {
                     'string.min': 'Diagnosis should have a minimum length of {#limit}.',
                     'string.max': 'Diagnosis should have a maximum length of {#limit}.',
                 }),
-            prescription:
-                joi.string()
-                    .min(3)
-                    .max(1000)
-                    .messages({
-                        'string.empty': 'Prescription cannot be empty.',
-                        'string.min': 'Prescription should have a minimum length of {#limit}.',
-                        'string.max': 'Prescription should have a maximum length of {#limit}.',
-                    }),
         })
 };

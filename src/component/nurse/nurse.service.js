@@ -16,7 +16,7 @@ exports.createNurseAccount = catchAsyncError(async (req, res, next) => {
   });
 
 // authentication login Nurse
-exports.nurseLogin=Signin(nurseMode)
+exports.nurseLogin=Signin(nurseMode,"nurse")
 
 // get Nurse profile information
 exports.nurseprofile = getProfile(nurseMode)

@@ -15,7 +15,7 @@ exports.createPatientAccount =  catchAsyncError(async (req, res, next) => {
   });
 
 // authenticate login for Patient
-exports.patientLogin = Signin(patientMode)
+exports.patientLogin = Signin(patientMode,"patient")
 
 // get Patient profile
 exports.patientProfile=getProfile(patientMode)

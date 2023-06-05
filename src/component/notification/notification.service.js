@@ -48,9 +48,9 @@ exports.scheduleMedicationNotifications = async () => {
       const nextScheduledTime = new Date(appointment.createdAt.getTime() + appointment.schedule * 60 * 60 * 1000);
       if (currentTime >= nextScheduledTime) {
         const { patient, nurse, medications } = appointment;
-  
         const nurseNotificationTitle = 'Medication Reminder';
-        const nurseNotificationBody = `Please assist ${patient.name} with their medication.`;
+        const medicationNames = medications.map((med) => med.medication.name).join(',');
+        const nurseNotificationBody = `Please assist ${patient.name} with their medications: ${medicationNames}`;
         messages.push({
           token: nurse.fcmToken,
           notification: {
@@ -60,7 +60,7 @@ exports.scheduleMedicationNotifications = async () => {
           },
         })
         const patientNotificationTitle = 'Medication Reminder';
-        const medicationNames = medications.map((med) => med.medication.name).join(',');
+       
         const patientNotificationBody = `It's time to take your medication. Please take the following medications: ${medicationNames}`;
         messages.push({
           token: patient.fcmToken,

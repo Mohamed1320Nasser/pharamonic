@@ -1,25 +1,43 @@
 const AppError = require("../../utils/AppError")
 const { catchAsyncError } = require("../../utils/catchAsyncErr")
 const AppointmentModel = require("./appointment.model")
-
+diagnosesModel = require('../diagnosis/diagnosis.model')
 exports.createAppointment = catchAsyncError(async (req, res, next) => {
     req.body.nurse = req.User._id
     const appointment = AppointmentModel(req.body)
     await appointment.save()
+    res.status(200).json({ message: "add new appointment to patient success" })
 })
-
 exports.addNotes = catchAsyncError(async (req, res, next) => {
-    const { appointmentId } = req.params
-    const { doctorNotes } = req.body
-    const appointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { doctorNotes }, { new: true })
-    !appointment && next(
-        new AppError(`No appointment for this id ${req.params.appointmentId}`, 404)
-    );
-    appointment && res.status(200).json({ message: "Sucessful to add Notes to Appointment " });
+
+    const { appointmentId } = req.params;
+    const { doctorNotes } = req.body;
+
+    if (!appointmentId || !doctorNotes) return next(new AppError("Invalid input data", 400));
+    const appointment = await AppointmentModel.findById(appointmentId);
+    if (!appointment) return next(new AppError("Appointment not found", 404));
+
+    const diagnosis = await diagnosesModel.findOne({ patient: appointment.patient, doctor: req.User._id });
+    if (!diagnosis) return next(new AppError("You are not authorized to add notes to this appointment", 403));
+
+    const updatedAppointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { doctorNotes }, { new: true });
+    res.status(200).json({ message: "Successfully added notes to the appointment", appointment: updatedAppointment });
+});
+
+exports.hasDuplicateMedications =catchAsyncError(async (req,res,next)=>{
+    const {medications} =req.body
+    const medicationIds = new Set();
+    for (const medication of medications) {
+      if (medicationIds.has(medication.medication)) {
+        return next(new AppError("Duplicate medications"))
+      }
+      medicationIds.add(medication.medication);
+    }
+    next()
 })
 
 exports.getPatientAppointments = catchAsyncError(async (req, res, next) => {
-    const appointments = await AppointmentModel.find({ patient: req.params.patientId }).populate([{
+    const appointments = await AppointmentModel.find({ patient: req.params.patient_id }).populate([{
         path: 'patient',
         select: 'name Id -_id'
     }, {
@@ -54,11 +72,8 @@ exports.complateappointment = catchAsyncError(async (req, res, next) => {
     const updatedAppointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { completed: true }, { new: true });
 
     if (!updatedAppointment) return next(new AppError(`No Appointment found for this id: ${req.params.appointmentId}`, 404));
-
     res.status(200).json({ message: "Successfully completed appointment" });
-
 })
-
 exports.getAppointmentToComplate = catchAsyncError(async (req, res, next) => {
     const currentTime = new Date();
     const tasks = await AppointmentModel.find({ completed: false });
