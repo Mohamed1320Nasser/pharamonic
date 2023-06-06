@@ -1,9 +1,13 @@
 const AppError = require("../../utils/AppError")
 const { catchAsyncError } = require("../../utils/catchAsyncErr")
+const patientModel = require("../patient/patient.model")
 const AppointmentModel = require("./appointment.model")
 diagnosesModel = require('../diagnosis/diagnosis.model')
 exports.createAppointment = catchAsyncError(async (req, res, next) => {
     req.body.nurse = req.User._id
+    const patient = await patientModel.findOne({Id:req.body.Id})
+    if(!patient) return next(new AppError("patient not found", 404));
+    req.body.patient = patient._id
     const appointment = AppointmentModel(req.body)
     await appointment.save()
     res.status(200).json({ message: "add new appointment to patient success" })

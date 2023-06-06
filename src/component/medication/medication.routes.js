@@ -11,8 +11,8 @@ const { MedicationSchema, UpdateMedicationSchema } = require('./medication.valid
 
 const router = require('express').Router()
 router
-.get(('/'), protectedRoutes, allowedTo("manger","doctor"), getAllMedicate)
-.get("/:id", protectedRoutes, allowedTo("manger","doctor"), getSpcificMedicate)
+.get(('/'), protectedRoutes, allowedTo("manger","doctor","nurse"), getAllMedicate)
+.get("/:id", protectedRoutes, allowedTo("manger","doctor","nurse"), getSpcificMedicate)
 
 router.use(protectedRoutes, allowedTo('manger'))
 

@@ -19,12 +19,13 @@ exports.appointmentSchema = {
                 .messages({
                     "any.required": "Medications are required.",
                 }),
-            patient: joi.string()
-                .pattern(/^[0-9a-fA-F]{24}$/)
+               Id: joi.string()
+                .pattern(/^Pt.{6}$/)
                 .required()
                 .messages({
-                    "string.pattern.base": "Patient ID must be a valid ObjectId.",
-                    "any.required": "Patient is required.",
+                    'any.required': 'ID is required.',
+                    'string.empty': 'ID cannot be empty.',
+                    'string.pattern.base': 'ID must start with "Nr" and be 8 characters long.',
                 }),
             schedule: joi.number().required().messages({
                 "any.required": "Schedule is required.",
