@@ -28,11 +28,9 @@ module.exports.Signin = (Model, type) => {
   });
 };
 
-
 exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
-    console.log(process.env.secrit_key);
     let decoded = jwt.verify(token, process.env.secrit_key);
     let Model;
     if (decoded.role === "manger") {

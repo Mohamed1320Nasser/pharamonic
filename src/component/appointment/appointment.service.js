@@ -79,7 +79,10 @@ exports.complateappointment = catchAsyncError(async (req, res, next) => {
 })
 exports.getAppointmentToComplate = catchAsyncError(async (req, res, next) => {
     const currentTime = new Date();
-    const tasks = await AppointmentModel.find({ completed: false });
+    const tasks = await AppointmentModel.find({ completed: false })
+    .populate('patient')
+    .populate('nurse')
+    .populate('medications.medication');;
     const completedTasks = tasks.filter(task => {
         const thresholdTime = new Date(task.createdAt.getTime() + task.schedule * 60 * 60 * 1000);
         return currentTime > thresholdTime;

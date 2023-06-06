@@ -6,10 +6,10 @@ const certPath = admin.credential.cert(serviceAccount);
 admin.initializeApp({
     credential: admin.credential.cert(certPath),
 });
-
 const sendNotificationsBulk = async (messages) => {
     try {
         for (const message of messages) {
+          console.log(message);
             const response = await admin.messaging().send(message);
             console.log('Notification sent successfully:', response);
         }
@@ -25,54 +25,42 @@ const sendNotificationsBulk = async (messages) => {
 }
 
 exports.scheduleMedicationNotifications = async () => {
-    const currentTime = new Date();
-  // console.log("test one");
-    const appointments = await Appointment.aggregate([
-      { $match: { completed: false } },
-      { $lookup: { from: 'patients', localField: 'patient', foreignField: '_id', as: 'patient' } },
-      { $unwind: '$patient' },
-      { $lookup: { from: 'nurses', localField: 'nurse', foreignField: '_id', as: 'nurse' } },
-      { $unwind: '$nurse' },
-      {
-        $lookup: {
-          from: 'medications',
-          localField: 'medications.medication',
-          foreignField: '_id',
-          as: 'medications.medication',
-        },
-      },
-      { $unwind: '$medications.medication' },
-    ]);
+    
+  const appointments = await Appointment.find({ completed: false })
+  .populate('patient')
+  .populate('nurse')
+  .populate('medications.medication');
     // console.log(appointments);
     const messages = [];
-    for (const appointment of appointments) {
-      const nextScheduledTime = new Date(appointment.createdAt.getTime() + appointment.schedule * 60 * 60 * 1000);
-      if (currentTime >= nextScheduledTime) {
+    const currentTime = new Date();
+    appointments.forEach((appointment)=>{
+      const nextScheduledTime =new Date(appointment.createdAt.getTime() + appointment.schedule * 60 * 60 * 1000);
+      if (currentTime > nextScheduledTime) {
+        // console.log(appointment);
         const { patient, nurse, medications } = appointment;
+        // console.log("appoin",appointment);
         const nurseNotificationTitle = 'Medication Reminder';
-        const medicationNames = medications.map((med) => med.medication.name).join(',');
-        const nurseNotificationBody = `Please assist ${patient.name} with their medications: ${medicationNames}`;
+        // const medicationNames = medications.map((med) => med.medication.name).join(',');
+        const nurseNotificationBody = `Please assist ${patient.name} with their medications: `;
         messages.push({
           token: nurse.fcmToken,
           notification: {
             title: nurseNotificationTitle,
             body: nurseNotificationBody,
-            sound: 'default',
           },
         })
         const patientNotificationTitle = 'Medication Reminder';
        
-        const patientNotificationBody = `It's time to take your medication. Please take the following medications: ${medicationNames}`;
+        const patientNotificationBody = `It's time to take your medication. Please take the following medications: `;
         messages.push({
           token: patient.fcmToken,
           notification: {
             title: patientNotificationTitle,
             body: patientNotificationBody,
-            sound: 'default',
           },
         });
       }
-    }
+    })
     await sendNotificationsBulk(messages);
   };
   
