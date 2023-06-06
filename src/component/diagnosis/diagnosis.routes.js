@@ -6,7 +6,7 @@ const { diagnosisSchema, updateDiagnosisSchema } = require('./diagnosis.validati
 
 const router = require('express').Router({ mergeParams: true })
 
-router.get('/', protectedRoutes, allowedTo('manger', "doctor"), getDiagnostics)
+router.get('/', protectedRoutes, allowedTo('manger',"doctor","nurse"), getDiagnostics)
 router.use(protectedRoutes, allowedTo("doctor"))
 router.post('/', validation(diagnosisSchema), createDiagnostics)
 router.put('/', validation(updateDiagnosisSchema), updateDiagnostics)

@@ -22,7 +22,7 @@ module.exports.Signin = (Model, type) => {
     }
     const token = jwt.sign(
       { UserId: User._id, name: User.name, role: User.role },
-      `${process.env.secret_key}`
+      process.env.secrit_key
     );
     return res.status(200).json({ message: "Login success", token });
   });
@@ -32,7 +32,7 @@ module.exports.Signin = (Model, type) => {
 exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
-    let decoded = jwt.verify(token, `${process.env.secret_key}`);
+    let decoded = jwt.verify(token, process.env.secrit_key);
     let Model;
     if (decoded.role === "manger") {
       Model = mangerModel;
