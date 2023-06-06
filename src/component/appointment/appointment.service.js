@@ -74,7 +74,6 @@ exports.getSpcificAppointment = catchAsyncError(async (req, res, next) => {
 exports.complateappointment = catchAsyncError(async (req, res, next) => {
     const { appointmentId } = req.params;
     const updatedAppointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { completed: true }, { new: true });
-
     if (!updatedAppointment) return next(new AppError(`No Appointment found for this id: ${req.params.appointmentId}`, 404));
     res.status(200).json({ message: "Successfully completed appointment" });
 })

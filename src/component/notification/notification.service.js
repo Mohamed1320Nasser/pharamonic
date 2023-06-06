@@ -26,7 +26,7 @@ const sendNotificationsBulk = async (messages) => {
 
 exports.scheduleMedicationNotifications = async () => {
     const currentTime = new Date();
-  
+  // console.log("test one");
     const appointments = await Appointment.aggregate([
       { $match: { completed: false } },
       { $lookup: { from: 'patients', localField: 'patient', foreignField: '_id', as: 'patient' } },
@@ -43,6 +43,7 @@ exports.scheduleMedicationNotifications = async () => {
       },
       { $unwind: '$medications.medication' },
     ]);
+    // console.log(appointments);
     const messages = [];
     for (const appointment of appointments) {
       const nextScheduledTime = new Date(appointment.createdAt.getTime() + appointment.schedule * 60 * 60 * 1000);
