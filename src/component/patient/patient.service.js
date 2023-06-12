@@ -3,6 +3,8 @@ const factory=require("../Handler/handle.refactor");
 const { Signin, getProfile, changePassword } = require('../auth/authentcation');
 const { catchAsyncError } = require('../../utils/catchAsyncErr');
 const AppError = require('../../utils/AppError');
+const appointmentModel = require('../appointment/appointment.model');
+const diagnosisModel = require('../diagnosis/diagnosis.model');
 
 // craete Patient account 
 exports.createPatientAccount =  catchAsyncError(async (req, res, next) => {
@@ -17,13 +19,9 @@ exports.createPatientAccount =  catchAsyncError(async (req, res, next) => {
 // authenticate login for Patient
 exports.patientLogin = Signin(patientMode,"patient")
 
-// get Patient profile
-exports.patientProfile=getProfile(patientMode)
 
 // change password for Patient
 exports.patientChangePass= changePassword(patientMode)
-
-
 
 // get all Patients
 exports.getAllPatientAccounts = factory.getAll(patientMode)
@@ -36,4 +34,35 @@ exports.deletePatientAccount = factory.deleteOn(patientMode)
 
 // update specific Patient
 exports.UpdatePatientAccount = factory.updateOne(patientMode)
+
+// get Patient profile
+exports.patientProfile=getProfile(patientMode)
+
+exports.patientAppointments=catchAsyncError(async(req,res,next)=>{
+  pationetId =req.User._id
+  const appointments = await appointmentModel.find({patient:pationetId}).populate([{
+    path: 'patient',
+    select: 'name Id -_id'
+}, {
+    path: 'nurse',
+    select: 'name Id -_id'
+}, {
+    path: 'medications.medication',
+    select: 'name -_id'
+}])
+  if(!appointments) return next(new AppError("You do not have any appointment",404))
+res.status(200).json({result:appointments})
+})
+exports.patientDiagnosis=catchAsyncError(async(req,res,next)=>{
+  pationetId =req.User._id
+  const Diagnosis = await diagnosisModel.find({patient:pationetId}).populate([{
+    path: 'patient',
+    select: 'name Id -_id'
+}, {
+    path: 'doctor',
+    select: 'name Id -_id'
+}])
+  if(!Diagnosis) return next(new AppError("Soon you will be diagnosed",404))
+res.status(200).json({result:Diagnosis})
+})
 

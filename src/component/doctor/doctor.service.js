@@ -18,7 +18,6 @@ exports.createDoctorAccount = catchAsyncError(async (req, res, next) => {
 // authenticate login in doctor
 exports.loginDoctor = Signin(DoctorMode)
 
-
 // get all Doctors
 exports.getAllDoctorAccounts = factory.getAll(DoctorMode)
 

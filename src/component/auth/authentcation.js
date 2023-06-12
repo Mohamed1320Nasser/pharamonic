@@ -57,7 +57,6 @@ exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
 
   exports.allowedTo = (...roles) => {
     return catchAsyncError(async (req, res, next) => {
-      console.log(req.User.role);
       if (!roles.includes(req.User.role))
         return next(new AppError("You don't have permission to do this", 401));
       next();

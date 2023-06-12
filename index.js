@@ -28,6 +28,7 @@ const port = process.env.PORT ||4000
 
 // Call the scheduleMedicationNotifications function periodically (e.g., every minute)
 // setInterval(scheduleMedicationNotifications, 60000);
+
 // Handle rejection outside express
 process.on("unhandledRejection", (err) => {
     console.log("unhandledRejection", err.stack);

@@ -1,35 +1,71 @@
-const { validation } = require('../../utils/validation')
-const { loginSchema, changePassSchema } = require('../auth/auth.validation')
-const { protectedRoutes, allowedTo } = require('../auth/authentcation')
-
+const router = require('express').Router();
+const { validation } = require('../../utils/validation');
+const { loginSchema, changePassSchema } = require('../auth/auth.validation');
+const diagnosis = require('../diagnosis/diagnosis.routes');
+const appointment = require('../appointment/appointment.routes');
 const {
-    createPatientAccount,
-    getAllPatientAccounts,
-    getSpcificPatientAccount,
-    UpdatePatientAccount,
-    deletePatientAccount,
-    patientLogin,
-    patientProfile,
-    patientChangePass
-} = require('./patient.service')
-const { PatientSchema, UpadtePatientSchema } = require('./patient.validation')
-const diagnosis = require('../diagnosis/diagnosis.routes')
-const appointment = require("../appointment/appointment.routes")
+  createPatientAccount,
+  getAllPatientAccounts,
+  getSpcificPatientAccount,
+  UpdatePatientAccount,
+  deletePatientAccount,
+  patientLogin,
+  patientProfile,
+  patientChangePass,
+  patientAppointments,
+  patientDiagnosis,
+} = require('./patient.service');
+const { PatientSchema, UpadtePatientSchema } = require('./patient.validation');
+const { protectedRoutes, allowedTo } = require('../auth/authentcation');
 
-const router = require('express').Router()
+router.use('/:patient_id/diagnosis', diagnosis);
+router.use('/:patient_id/appointments', appointment);
 
-router.use('/:id/diagnosis', diagnosis)
-router.use('/:patient_id/appointments', appointment)
-router.post('/auth', validation(loginSchema), patientLogin)
-router.get('/profile', protectedRoutes, allowedTo('patient'), patientProfile)
-router.post('/profile/changePass', protectedRoutes, allowedTo('patient'), validation(changePassSchema), patientChangePass)
+router.post('/auth', validation(loginSchema), patientLogin);
+
+router.get(
+  '/profile',
+  protectedRoutes,
+  allowedTo('patient'),
+  patientProfile
+);
+router.get(
+  '/profile/appointmentes',
+  protectedRoutes,
+  allowedTo('patient'),
+  patientAppointments
+);
+router.get(
+  '/profile/diagnoses',
+  protectedRoutes,
+  allowedTo('patient'),
+  patientDiagnosis
+);
+router.post(
+  '/profile/changePass',
+  protectedRoutes,
+  allowedTo('patient'),
+  validation(changePassSchema),
+  patientChangePass
+);
+
 router
-    .get('/', protectedRoutes, allowedTo('manger', 'doctor', "nurse"), getAllPatientAccounts)
-    .get('/:id', protectedRoutes, allowedTo('manger', 'doctor', "nurse"), getSpcificPatientAccount)
-router.use(protectedRoutes, allowedTo('manger'))
-router.route('/').post(validation(PatientSchema), createPatientAccount)
+  .route('/')
+  .post(validation(PatientSchema), createPatientAccount)
+  .get(
+    protectedRoutes,
+    allowedTo('manager', 'doctor', 'nurse'),
+    getAllPatientAccounts
+  );
+
 router
-    .route('/:id')
-    .put(validation(UpadtePatientSchema), UpdatePatientAccount)
-    .delete(deletePatientAccount)
-module.exports = router
+  .route('/:id')
+  .get(
+    protectedRoutes,
+    allowedTo('manager', 'doctor', 'nurse'),
+    getSpcificPatientAccount
+  )
+  .put(validation(UpadtePatientSchema), UpdatePatientAccount)
+  .delete(deletePatientAccount);
+
+module.exports = router;

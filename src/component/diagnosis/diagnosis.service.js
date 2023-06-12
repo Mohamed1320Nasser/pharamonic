@@ -1,20 +1,40 @@
 const AppError = require("../../utils/AppError");
 const { catchAsyncError } = require("../../utils/catchAsyncErr");
-const pationtModel = require('../patient/patient.model');
-const diagnosisModel = require("./diagnosis.model");
-exports.createDiagnostics = catchAsyncError(async (req,res,next)=>{
-    const Patient=await pationtModel.findOne({Id:req.body.Id})
-    if(!Patient) return next(new AppError("Patient not found",404))
-    req.body.doctor=req.User._id
-    req.body.patient=Patient._id
-    req.body.date = Date.now()
-    const diagnosis = diagnosisModel(req.body)
-    await diagnosis.save()
-    res.status(200).json({message:'Create Diagnostic Successfully'})
-})
+const PationtModel = require('../patient/patient.model');
+const DiagnosisModel = require("./diagnosis.model");
 
-exports.getDiagnostics=catchAsyncError(async (req,res,next)=>{
-    const diagnostic = await diagnosisModel.findOne({patient: req.params.id}).populate([{
+exports.createDiagnostic = catchAsyncError(async (req, res, next) => {
+  const { Id } = req.body;
+
+  try {
+    const Patient = await PationtModel.findOne({ Id }, 'Id');
+    if (!Patient) {
+      return next(new AppError('Patient not found', 404));
+    }
+
+    const hasDiagnosis = await DiagnosisModel.findOne({ patient: Patient._id });
+    if (hasDiagnosis) {
+      return next(new AppError('The patient already has a diagnosis', 404));
+    }
+
+    req.body = {
+      ...req.body,
+      doctor: req.User._id,
+      patient: Patient._id,
+      date: Date.now(),
+    };
+
+    await DiagnosisModel.create(req.body);
+
+    res.status(200).json({ message: 'Diagnostic created successfully' });
+  } catch (error) {
+    next(new AppError(error, 404))
+  }
+});
+
+
+exports.getDiagnostic=catchAsyncError(async (req,res,next)=>{
+    const diagnostic = await DiagnosisModel.findOne({patient: req.params.patient_id}).populate([{
       path: 'patient',
       select: 'name Id -_id'
   }, {
@@ -24,18 +44,18 @@ exports.getDiagnostics=catchAsyncError(async (req,res,next)=>{
     if(!diagnostic) return  next(new AppError("diagnostic not found",404))
     res.status(200).json({result:diagnostic})
 })
-exports.updateDiagnostics=catchAsyncError(async (req,res,next)=>{
+exports.updateDiagnostic=catchAsyncError(async (req,res,next)=>{
     patient=req.params.id
     const {diagnosis,prescription}= req.body
-    const diagnostic = await diagnosisModel.findOne({patient})
+    const diagnostic = await DiagnosisModel.findOne({patient})
     if(!diagnostic) return  next(new AppError("diagnostic not found",404))
-      await diagnosisModel.findOneAndUpdate({patient},{diagnosis,prescription},{new:true})
+      await DiagnosisModel.findOneAndUpdate({patient},{diagnosis,prescription},{new:true})
     res.status(200).json({message:"Updated diagnostic successfully"})
 })
-exports.deleteDiagnostics=catchAsyncError(async (req,res,next)=>{
+exports.deleteDiagnostic=catchAsyncError(async (req,res,next)=>{
     patient=req.params.id
-    const diagnostic = await diagnosisModel.findOne({patient})
+    const diagnostic = await DiagnosisModel.findOne({patient})
     if(!diagnostic) return  next(new AppError("diagnostic not found",404))
-      await diagnosisModel.findOneAndDelete({patient})
+      await DiagnosisModel.findOneAndDelete({patient})
     res.status(200).json({message:"Delete diagnostic successfully"})
 })
