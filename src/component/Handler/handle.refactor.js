@@ -18,7 +18,17 @@ exports.getOne = (Model) => {
 }
 exports.getAll = (Model) => {
     return catchAsyncError(async (req, res, next) => {
-        const Document = await Model.find({})
+        let filter={}
+        if(req.query.keyword){
+            let {keyword}=req.query
+            filter={
+                $or: [
+                  { name: { $regex: keyword, $options: "i" } },
+                  { Id: { $regex: keyword, $options: "i" } },
+                ],
+              }
+        }
+        const Document = await Model.find(filter)
         !Document && next(new AppError("Document not found", 404));
         Document && res.status(200).json({ result: Document })
     })

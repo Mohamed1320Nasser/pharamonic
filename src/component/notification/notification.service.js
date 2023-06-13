@@ -1,9 +1,8 @@
-const admin = require("./firebase")
+const admin = require("../../utils/firebase")
 const Appointment = require('../appointment/appointment.model')
 
 const { PatientNotification, NurseNotification } = require('./notofocation.model');
 const { catchAsyncError } = require("../../utils/catchAsyncErr");
-const AppError = require("../../utils/AppError");
 
 
 const sendNotificationsBulk = async (messages) => {
@@ -34,7 +33,7 @@ const sendNotificationsBulk = async (messages) => {
         }
       });
       await Promise.allSettled(notifications);
-      console.log("sucess sending",response);
+      console.log("sucess sending");
     } catch (error) {
         if (error.errorInfo && Array.isArray(error.errorInfo.errors)) {
             for (const err of error.errorInfo.errors) {
@@ -101,43 +100,47 @@ exports.scheduleMedicationNotifications = async () => {
   }
 }
 
-  exports.getPatientNotifications=catchAsyncError(async(req,res,next)=>{
-     const PatientId=req.User._id
-   const notifications= await PatientNotification.find({patient: PatientId})
-   if(!notifications) return next(new AppError("You have no notifications",404))
-    res.status(200).json({message:notifications})
-  })
-  exports.getNurseNotifications=catchAsyncError(async(req,res,next)=>{
-    const NurseId=req.User._id
-  const notifications= await NurseNotification.find({nurse: NurseId})
-  if(!notifications) return next(new AppError("You have no notifications",404))
-   res.status(200).json({message:notifications})
- })
+exports.getPatientNotifications = catchAsyncError(async (req, res, next) => {
+  const patientId = req.User._id;
+  const notifications = await PatientNotification.find({ patient: patientId });
+  if (!notifications.length) {
+    return res.status(404).json({ message: "You have no notifications" });
+  }
+  res.status(200).json({ notifications });
+});
+exports.getNurseNotifications = catchAsyncError(async (req, res, next) => {
+  const nurseId = req.User._id;
+  const notifications = await NurseNotification.find({ nurse: nurseId });
+  if (!notifications.length) {
+    return res.status(404).json({ message: "You have no notifications" });
+  }
+  res.status(200).json({ notifications });
+});
 
- exports.deleteAllPatientNotifications = catchAsyncError(async(req,res,next)=>{
-  const PatientId=req.User._id
-  await PatientNotification.deleteMany({patient:PatientId})
-  res.status(200).json({message:"all Notifications were deleted"})
- })
+exports.deleteAllPatientNotifications = catchAsyncError(async (req, res, next) => {
+  const patientId = req.User._id;
+  await PatientNotification.deleteMany({ patient: patientId });
+  res.status(200).json({ message: "All notifications were deleted" });
+});
 
- exports.deleteAllNurseNotifications = catchAsyncError(async(req,res,next)=>{
-  const NurseId=req.User._id
-  await NurseNotification.deleteMany({nurse:NurseId})
-  res.status(200).json({message:"all Notifications were deleted"})
- })
+exports.deleteAllNurseNotifications = catchAsyncError(async (req, res, next) => {
+  const nurseId = req.User._id;
+  await NurseNotification.deleteMany({ nurse: nurseId });
+  res.status(200).json({ message: "All notifications were deleted" });
+});
 
- exports.deleteOneNurseNotifications = catchAsyncError(async(req,res,next)=>{
-  const NurseId=req.User._id
-  const {id}=req.params
-  await NurseNotification.findOneAndDelete({nurse:NurseId,_id:id})
-  res.status(200).json({message:"delete notification successfully"})
- })
- 
- exports.deleteOnePatientNotifications = catchAsyncError(async(req,res,next)=>{
-  const PatientId=req.User._id
-  const {id}=req.params
-  await PatientNotification.findOneAndDelete({patient:PatientId,_id:id})
-  res.status(200).json({message:"delete notification successfully"})
- })
+exports.deleteOneNurseNotification = catchAsyncError(async (req, res, next) => {
+  const nurseId = req.User._id;
+  const { id } = req.params;
+  await NurseNotification.findOneAndDelete({ nurse: nurseId, _id: id });
+  res.status(200).json({ message: "Notification deleted successfully" });
+});
+
+exports.deleteOnePatientNotification = catchAsyncError(async (req, res, next) => {
+  const patientId = req.User._id;
+  const { id } = req.params;
+  await PatientNotification.findOneAndDelete({ patient: patientId, _id: id });
+  res.status(200).json({ message: "Notification deleted successfully" });
+});
 
 
