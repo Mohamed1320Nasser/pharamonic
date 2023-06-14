@@ -11,6 +11,7 @@ module.exports.Signin = (Model, type) => {
   return catchAsyncError(async (req, res, next) => {
     const { Id, password, fcmToken } = req.body;
     const User = await Model.findOne({ Id });
+    // console.log(User);
     if (!User) return next(new AppError("You do not have an account, or the ID is incorrect", 401));
     const match = await bcrypt.compare(password, User.password);
     if (!match) return next(new AppError("Incorrect password", 401));
@@ -29,6 +30,7 @@ module.exports.Signin = (Model, type) => {
 };
 
 exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
+  try{
     const { token } = req.headers;
     if (!token) return next(new AppError("You Should Make login", 401));
     let decoded = jwt.verify(token, process.env.secrit_key);
@@ -47,13 +49,21 @@ exports.protectedRoutes = catchAsyncError(async (req, res, next) => {
     const User = await Model.findById(decoded.UserId);
     if (!User) return next(new AppError("User not found", 404));
     if (User.passwordChangeAt) {
-      let changePassword = parseInt(User.passwordChangeAt.getTime() / 100);
+      let changePassword = parseInt(User.passwordChangeAt.getTime() / 1000);
       if (changePassword > decoded.iat)
         return next(new AppError("password changed please login agine", 401));
     }
     req.User = User;
     next();
+  } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      return next(new AppError("Invalid token. Please log in again", 401));
+    } else {
+      return next(new AppError("Something went wrong", 500));
+    }
+  }
   });
+  /**/ 
 
   exports.allowedTo = (...roles) => {
     return catchAsyncError(async (req, res, next) => {

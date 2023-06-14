@@ -36,10 +36,10 @@ exports.createDiagnostic = catchAsyncError(async (req, res, next) => {
 exports.getDiagnostic=catchAsyncError(async (req,res,next)=>{
     const diagnostic = await DiagnosisModel.findOne({patient: req.params.patient_id}).populate([{
       path: 'patient',
-      select: 'name Id -_id'
+      select: 'name Id -_id dateOfBirth phone'
   }, {
       path: 'doctor',
-      select: 'name Id -_id'
+      select: 'name Id -_id specialty'
   }])
     if(!diagnostic) return  next(new AppError("diagnostic not found",404))
     res.status(200).json({result:diagnostic})

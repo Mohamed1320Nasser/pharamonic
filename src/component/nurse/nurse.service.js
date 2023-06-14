@@ -37,3 +37,4 @@ exports.deleteNurseAccount = factory.deleteOn(nurseMode)
 // update specific nurse
 exports.UpdateNurseAccount = factory.updateOne(nurseMode)
 
+exports.defaultPasswordforNurse=factory.serDefaultPassword(nurseMode,process.env.DEFAULT_NURES)

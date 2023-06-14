@@ -14,6 +14,7 @@ const {
   patientChangePass,
   patientAppointments,
   patientDiagnosis,
+  defaultPasswordforPatient,
 } = require('./patient.service');
 const { PatientSchema, UpadtePatientSchema } = require('./patient.validation');
 const { protectedRoutes, allowedTo } = require('../auth/authentcation');
@@ -54,18 +55,27 @@ router
   .post(validation(PatientSchema), createPatientAccount)
   .get(
     protectedRoutes,
-    allowedTo('manager', 'doctor', 'nurse'),
+    allowedTo('manger', 'doctor', 'nurse'),
     getAllPatientAccounts
   );
-
 router
   .route('/:id')
   .get(
     protectedRoutes,
-    allowedTo('manager', 'doctor', 'nurse'),
+    allowedTo('manger', 'doctor', 'nurse'),
     getSpcificPatientAccount
   )
-  .put(validation(UpadtePatientSchema), UpdatePatientAccount)
-  .delete(deletePatientAccount);
+  .put(
+    protectedRoutes,
+    allowedTo('manger'),
+    validation(UpadtePatientSchema), UpdatePatientAccount
+    )
+  .delete(
+    protectedRoutes,
+    allowedTo('manger'),
+    deletePatientAccount
+  );
+  router.get('/defaultPassword/:id',defaultPasswordforPatient)
+
 
 module.exports = router;

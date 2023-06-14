@@ -48,5 +48,12 @@ schema.pre("save", function () {
       Number(process.env.saltRounds)
     );
   });
+  schema.pre("findOneAndUpdate", function () {
+    if (!this._update.password) return;
+    this._update.password = bcrypt.hashSync(
+      this._update.password,
+      Number(process.env.saltRounds)
+    );
+  });
 
 module.exports = model('Nurse', schema)

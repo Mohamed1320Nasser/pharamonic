@@ -37,4 +37,5 @@ exports.deleteMangerAccunt=factory.deleteOn(mangerModel)
 // update spcific manger account
 exports.updateMangerAccunt=factory.updateOne(mangerModel)
 
+exports.defaultPasswordforManger=factory.serDefaultPassword(mangerModel,process.env.DEFAULT_MANGER)
 

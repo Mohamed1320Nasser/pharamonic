@@ -35,3 +35,6 @@ exports.doctorProfile=getProfile(DoctorMode)
 
 // change password
 exports.changePassDoctor=changePassword(DoctorMode)
+
+// set password defaults
+exports.defaultPasswordforDoctor=factory.serDefaultPassword(DoctorMode,process.env.DEFAULT_DOCTOR)

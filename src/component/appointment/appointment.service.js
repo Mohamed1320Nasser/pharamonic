@@ -25,7 +25,7 @@ exports.addNotes = catchAsyncError(async (req, res, next) => {
     if (!diagnosis) return next(new AppError("You are not authorized to add notes to this appointment", 403));
 
     const updatedAppointment = await AppointmentModel.findByIdAndUpdate(appointmentId, { doctorNotes }, { new: true });
-    res.status(200).json({ message: "Successfully added notes to the appointment", appointment: updatedAppointment });
+    res.status(200).json({ message: "Successfully added notes to the appointment" });
 });
 
 exports.hasDuplicateMedications =catchAsyncError(async (req,res,next)=>{

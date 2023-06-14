@@ -57,5 +57,13 @@ exports.updateOne = (Model) =>{
         Document && res.status(200).json({message:"Sucessful Update"});
     });
 }
+exports.serDefaultPassword=(Model,password)=>{
+    return catchAsyncError(async(req,res,next)=>{
+        const {id}=req.params
+       const user= await Model.findByIdAndUpdate(id,{password},{new :true})
+       if(!user) return next(new AppError(`No user for this id ${id}`, 404));
+       res.status(200).json({"message":"set default password successfully"})
+     })
+}
 
 

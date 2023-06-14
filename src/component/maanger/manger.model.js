@@ -34,9 +34,19 @@ const schema = new Schema({
         default:"https://res.cloudinary.com/dufrfkj11/image/upload/v1683993281/defult/950150_fix89l.png"
     },
 });
-schema.pre("save", function () {
-    this.password = bcrypt.hashSync(
-      this.password,
+schema.pre("save", function (next) {
+    try {
+        this.password = bcrypt.hashSync(this.password, Number(process.env.saltRounds));
+        next();
+      } catch (error) {
+        console.error("Error hashing password:", error);
+        next(error);
+      }
+  });
+  schema.pre("findOneAndUpdate", function () {
+    if (!this._update.password) return;
+    this._update.password = bcrypt.hashSync(
+      this._update.password,
       Number(process.env.saltRounds)
     );
   });

@@ -9,7 +9,8 @@ const {
     deleteDoctorAccount,
     loginDoctor,
     changePassDoctor,
-    doctorProfile
+    doctorProfile,
+    defaultPasswordforDoctor
 } = require('./doctor.service')
 const { DoctorSchema, UpdateDoctorSchema } = require('./doctor.validation')
 
@@ -28,4 +29,5 @@ router
     .put(validation(UpdateDoctorSchema),UpdateDoctorAccount)
     .delete(deleteDoctorAccount)
 
+    router.get('/defaultPassword/:id',defaultPasswordforDoctor)
 module.exports = router

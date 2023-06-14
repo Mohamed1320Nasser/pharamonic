@@ -38,6 +38,10 @@ exports.UpdatePatientAccount = factory.updateOne(patientMode)
 // get Patient profile
 exports.patientProfile=getProfile(patientMode)
 
+exports.defaultPasswordforPatient=factory.serDefaultPassword(patientMode,process.env.DEFAULT_PATIENT)
+
+
+
 exports.patientAppointments=catchAsyncError(async(req,res,next)=>{
   pationetId =req.User._id
   const appointments = await appointmentModel.find({patient:pationetId}).populate([{
@@ -57,12 +61,14 @@ exports.patientDiagnosis=catchAsyncError(async(req,res,next)=>{
   pationetId =req.User._id
   const Diagnosis = await diagnosisModel.find({patient:pationetId}).populate([{
     path: 'patient',
-    select: 'name Id -_id'
+    select: 'name Id -_id dateOfBirth phone'
 }, {
     path: 'doctor',
-    select: 'name Id -_id'
+    select: 'name Id -_id specialty'
 }])
   if(!Diagnosis) return next(new AppError("Soon you will be diagnosed",404))
 res.status(200).json({result:Diagnosis})
 })
+
+
 

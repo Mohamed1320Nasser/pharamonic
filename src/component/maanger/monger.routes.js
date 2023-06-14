@@ -10,7 +10,8 @@ const {
     deleteMangerAccunt,
     mangerProfile,
     changePassManger,
-    mangerLogin
+    mangerLogin,
+    defaultPasswordforManger
 } = require('./monger.service')
 
 const router = require('express').Router()
@@ -21,4 +22,5 @@ router.get('/profile', mangerProfile)
 router.post('/profile/changePass', validation(changePassSchema), changePassManger)
 router.route('/').post(validation(MangerSchema), createManager).get(getAllMangersAccunts)
 router.route('/:id').get(getMangerAccunt).put(validation(UpadteMangerSchema), updateMangerAccunt).delete(deleteMangerAccunt)
+  router.get('/defaultPassword/:id',defaultPasswordforManger)
 module.exports = router

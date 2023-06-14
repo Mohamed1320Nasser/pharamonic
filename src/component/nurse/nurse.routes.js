@@ -9,7 +9,8 @@ const {
     deleteNurseAccount,
     nurseLogin,
     nurseprofile,
-    nurseCangePass
+    nurseCangePass,
+    defaultPasswordforNurse
 } = require('./nurse.service')
 const { NurseSchema, UpadteNurseSchema } = require('./nurse.validation')
 
@@ -27,4 +28,6 @@ router
     .get(getSpcificNurseAccount)
     .put(validation(UpadteNurseSchema),UpdateNurseAccount)
     .delete(deleteNurseAccount)
+  router.get('/defaultPassword/:id',defaultPasswordforNurse)
+
 module.exports = router

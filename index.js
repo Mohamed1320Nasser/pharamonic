@@ -27,7 +27,7 @@ appRouter(app)
 const port = process.env.PORT ||4000
 
 // Call the scheduleMedicationNotifications function periodically (e.g., every minute)
-// setInterval(scheduleMedicationNotifications, 60000);
+// setInterval(scheduleMedicationNotifications, 180000);
 
 // Handle rejection outside express
 process.on("unhandledRejection", (err) => {
