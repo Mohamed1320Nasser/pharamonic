@@ -16,7 +16,6 @@ exports.addNotes = catchAsyncError(async (req, res, next) => {
 
     const { appointmentId } = req.params;
     const { doctorNotes } = req.body;
-
     if (!appointmentId || !doctorNotes) return next(new AppError("Invalid input data", 400));
     const appointment = await AppointmentModel.findById(appointmentId);
     if (!appointment) return next(new AppError("Appointment not found", 404));

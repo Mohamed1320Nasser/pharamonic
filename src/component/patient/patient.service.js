@@ -38,9 +38,14 @@ exports.UpdatePatientAccount = factory.updateOne(patientMode)
 // get Patient profile
 exports.patientProfile=getProfile(patientMode)
 
+exports.getpatientBelongsToDoctor=catchAsyncError(async(req,res,next)=>{
+  const diagnoses =await diagnosisModel.find({doctor:req.User._id}).populate('patient')
+  if(!diagnoses || diagnoses.length === 0) return next(new AppError("You not have Patients",401))
+  const patients = diagnoses.map(diagnosis => diagnosis.patient);
+  res.status(200).json({result: patients})
+})
+
 exports.defaultPasswordforPatient=factory.serDefaultPassword(patientMode,process.env.DEFAULT_PATIENT)
-
-
 
 exports.patientAppointments=catchAsyncError(async(req,res,next)=>{
   pationetId =req.User._id

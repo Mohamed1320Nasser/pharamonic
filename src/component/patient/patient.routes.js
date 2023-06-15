@@ -15,6 +15,7 @@ const {
   patientAppointments,
   patientDiagnosis,
   defaultPasswordforPatient,
+  getpatientBelongsToDoctor,
 } = require('./patient.service');
 const { PatientSchema, UpadtePatientSchema } = require('./patient.validation');
 const { protectedRoutes, allowedTo } = require('../auth/authentcation');
@@ -49,10 +50,19 @@ router.post(
   validation(changePassSchema),
   patientChangePass
 );
+router.get(
+  "/belongsDoctor",
+  protectedRoutes,
+  allowedTo('doctor'),
+  getpatientBelongsToDoctor
+)
 
 router
   .route('/')
-  .post(validation(PatientSchema), createPatientAccount)
+  .post(
+    protectedRoutes,
+    allowedTo('patient'),
+    validation(PatientSchema), createPatientAccount)
   .get(
     protectedRoutes,
     allowedTo('manger', 'doctor', 'nurse'),
