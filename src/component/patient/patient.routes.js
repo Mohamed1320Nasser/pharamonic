@@ -61,7 +61,7 @@ router
   .route('/')
   .post(
     protectedRoutes,
-    allowedTo('patient'),
+    allowedTo('manger'),
     validation(PatientSchema), createPatientAccount)
   .get(
     protectedRoutes,
