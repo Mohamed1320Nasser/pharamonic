@@ -33,7 +33,6 @@ const sendNotificationsBulk = async (messages) => {
         }
       });
       await Promise.allSettled(notifications);
-      console.log("sucess sending");
     } catch (error) {
         if (error.errorInfo && Array.isArray(error.errorInfo.errors)) {
             for (const err of error.errorInfo.errors) {

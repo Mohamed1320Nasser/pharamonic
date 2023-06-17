@@ -54,6 +54,9 @@ exports.deletePatientAccount = catchAsyncError(async (req, res, next) => {
     // Delete patient's appointments
     await appointmentModel.deleteMany({ patient: id }).session(session);
 
+    // Delete patient 's notification
+    await PatientNotification.deleteMany({ patient: id }).session(session);
+    
     // Delete patient's account
     await patientMode.findByIdAndDelete(id).session(session);
 
