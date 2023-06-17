@@ -28,7 +28,7 @@ exports.getAll = (Model) => {
                 ],
               }
         }
-        const Document = await Model.find(filter)
+        const Document = await Model.find(filter).sort({ name: 1 })
         !Document && next(new AppError("Document not found", 404));
         Document && res.status(200).json({ result: Document })
     })
