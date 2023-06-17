@@ -5,6 +5,7 @@ const { catchAsyncError } = require('../../utils/catchAsyncErr');
 const AppError = require('../../utils/AppError');
 const appointmentModel = require('../appointment/appointment.model');
 const diagnosisModel = require('../diagnosis/diagnosis.model');
+const mongoose = require("mongoose");
 
 // craete Patient account 
 exports.createPatientAccount =  catchAsyncError(async (req, res, next) => {
@@ -28,15 +29,46 @@ exports.getAllPatientAccounts = factory.getAll(patientMode)
 
 // get specific Patient
 exports.getSpcificPatientAccount = factory.getOne(patientMode)
-
-//delete specific Patient
-exports.deletePatientAccount = factory.deleteOn(patientMode)
-
 // update specific Patient
 exports.UpdatePatientAccount = factory.updateOne(patientMode)
 
 // get Patient profile
 exports.patientProfile=getProfile(patientMode)
+
+//delete specific Patient
+
+
+exports.deletePatientAccount = catchAsyncError(async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { id } = req.params;
+    const patient = await Model.findById(id).session(session);
+    if (!patient) {
+      throw new AppError("Document not found", 404);
+    }
+    // Delete patient's diagnoses
+    await diagnosisModel.deleteMany({ patient: id }).session(session);
+
+    // Delete patient's appointments
+    await appointmentModel.deleteMany({ patient: id }).session(session);
+
+    // Delete patient's account
+    await patientMode.findByIdAndDelete(id).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).json({ message: "Successful Delete" });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    next(new AppError(error,401))
+  }
+});
+
+
 
 exports.getpatientBelongsToDoctor=catchAsyncError(async(req,res,next)=>{
   const diagnoses =await diagnosisModel.find({doctor:req.User._id}).populate('patient')
