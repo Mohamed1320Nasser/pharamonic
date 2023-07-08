@@ -36,15 +36,13 @@ exports.UpdatePatientAccount = factory.updateOne(patientMode)
 exports.patientProfile=getProfile(patientMode)
 
 //delete specific Patient
-
-
 exports.deletePatientAccount = catchAsyncError(async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     const { id } = req.params;
-    const patient = await Model.findById(id).session(session);
+    const patient = await patientMode.findById(id).session(session);
     if (!patient) {
       throw new AppError("Document not found", 404);
     }
@@ -56,7 +54,6 @@ exports.deletePatientAccount = catchAsyncError(async (req, res, next) => {
 
     // Delete patient 's notification
     await PatientNotification.deleteMany({ patient: id }).session(session);
-    
     // Delete patient's account
     await patientMode.findByIdAndDelete(id).session(session);
 
@@ -70,7 +67,6 @@ exports.deletePatientAccount = catchAsyncError(async (req, res, next) => {
     next(new AppError(error,401))
   }
 });
-
 
 
 exports.getpatientBelongsToDoctor=catchAsyncError(async(req,res,next)=>{

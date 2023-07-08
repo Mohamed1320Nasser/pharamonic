@@ -11,7 +11,6 @@ module.exports.Signin = (Model, type) => {
   return catchAsyncError(async (req, res, next) => {
     const { Id, password, fcmToken } = req.body;
     const User = await Model.findOne({ Id });
-    // console.log(User);
     if (!User) return next(new AppError("You do not have an account, or the ID is incorrect", 401));
     const match = await bcrypt.compare(password, User.password);
     if (!match) return next(new AppError("Incorrect password", 401));
